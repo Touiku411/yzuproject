@@ -70,6 +70,7 @@ public class AutoBlink : MonoBehaviour
     IEnumerator DoBlink()
     {
         isBlinking = true;
+        Debug.Log("眨眼");
         float halfDuration = blinkSpeed / 2f;
         float timer = 0f;
 

@@ -9,6 +9,17 @@ public class WebcamTargetController : MonoBehaviour
     public float moveMultiplier = 1.5f; // 目標球移動的振幅
     public float smoothSpeed = 10f;     // 移動平滑度
 
+    [Header("眼球微動 (Saccades)")]
+    [Tooltip("眼球會在目標周圍多大的範圍內隨機跳動 (單位: 公尺)")]
+    public float saccadeRadius = 0.05f;
+    [Tooltip("每次視線跳動後，最短會凝視多久 (秒)")]
+    public float minSaccadeTime = 0.2f;
+    [Tooltip("每次視線跳動後，最長會凝視多久 (秒)")]
+    public float maxSaccadeTime = 1.5f;
+
+    private Vector3 saccadeOffset; // 記錄目前的視線微小偏移量
+    private float saccadeTimer = 0f; // 凝視計時器
+
     private UdpClient udpClient;
     private Thread receiveThread;
     private Vector3 startPos;
@@ -50,9 +61,33 @@ public class WebcamTargetController : MonoBehaviour
     }
 
     void Update()
-    {
-        // 平滑移動目標球
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * smoothSpeed);
+    {     
+        // === 1. 計算眼球微動 (Saccades) ===
+        saccadeTimer -= Time.deltaTime;
+
+        // 當計時器歸零，代表眼球要跳動尋找臉上的新焦點（例如從左眼跳到右眼，或跳到鼻子）
+        if (saccadeTimer <= 0f)
+        {
+            // 在設定的半徑範圍內，隨機產生一個微小的 X、Y 偏移量
+            saccadeOffset = new Vector3(
+                Random.Range(-saccadeRadius, saccadeRadius),
+                Random.Range(-saccadeRadius, saccadeRadius),
+                0f
+            );
+
+            // 重新設定計時器，決定下一次眼球跳動是什麼時候
+            saccadeTimer = Random.Range(minSaccadeTime, maxSaccadeTime);
+        }
+
+        // === 2. 結合目標位置與微動偏移量 ===
+        // 將你原本要追蹤的核心座標，加上這個極微小的隨機偏移
+        Vector3 finalTargetPos = targetPos + saccadeOffset;
+        // (如果是滑鼠腳本，這行請改成 Vector3 finalTargetPos = targetWorldPos + saccadeOffset;)
+
+        // === 3. 平滑移動目標球 ===
+        // 球體會朝著「加上微動後的新座標」滑順移動
+        transform.position = Vector3.Lerp(transform.position, finalTargetPos, Time.deltaTime * smoothSpeed);
+
     }
 
     void OnDestroy()
