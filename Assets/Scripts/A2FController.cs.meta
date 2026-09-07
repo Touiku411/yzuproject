@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 262c8777beb4b734aa09f75d237f6e9e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - masterFaceRenderer: {instanceID: 0}
+  - testAudioClip: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
