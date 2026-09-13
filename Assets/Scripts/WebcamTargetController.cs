@@ -61,7 +61,7 @@ public class WebcamTargetController : MonoBehaviour
     }
 
     void Update()
-    {     
+    {
         // === 1. 計算眼球微動 (Saccades) ===
         saccadeTimer -= Time.deltaTime;
 
