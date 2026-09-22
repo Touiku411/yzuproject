@@ -29,6 +29,7 @@ public class A2FController : MonoBehaviour
 
 
     [Header("Audio2Face 標準表情對應名稱")]
+    // 僅供開發階段檢查 Mesh 的 BlendShape Index 順序。
     private readonly string[] a2fBlendshapeNames = new string[]
     {
         "EyeBlinkLeft", "EyeLookDownLeft", "EyeLookInLeft", "EyeLookOutLeft", "EyeLookUpLeft",
@@ -168,6 +169,69 @@ public class A2FController : MonoBehaviour
         return pcmData;
     }
 
+    [ContextMenu("檢查 A2F 52-Key Index")]
+    private void ValidateA2FBlendShapeIndex()
+    {
+        if (targetRenderers == null || targetRenderers.Length == 0)
+        {
+            Debug.LogWarning("⚠️ 請先設定 targetRenderers", this);
+            return;
+        }
+
+        foreach (var renderer in targetRenderers)
+        {
+            if (renderer == null)
+            {
+                Debug.LogWarning("⚠️ targetRenderers 中有未指定的 Renderer", this);
+                continue;
+            }
+
+            Debug.Log($"===== 檢查 {renderer.name} =====", renderer);
+
+            if (renderer.sharedMesh == null)
+            {
+                Debug.LogWarning($"⚠️ {renderer.name} 沒有 sharedMesh", renderer);
+                continue;
+            }
+
+            int blendShapeCount = renderer.sharedMesh.blendShapeCount;
+            Debug.Log($"BlendShape 總數：{blendShapeCount}", renderer);
+
+            if (blendShapeCount < 52)
+            {
+                Debug.LogWarning($"⚠️ {renderer.name} 只有 {blendShapeCount} 個 BlendShape，不到 52 個", renderer);
+            }
+
+            int count = Mathf.Min(52, blendShapeCount);
+            int mismatchCount = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                string meshName = renderer.sharedMesh.GetBlendShapeName(i);
+                string a2fName = a2fBlendshapeNames[i];
+
+                if (string.Equals(meshName, a2fName, StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.Log($"✅ [{i}] {a2fName}", renderer);
+                }
+                else
+                {
+                    mismatchCount++;
+                    Debug.LogWarning($"❌ [{i}] 不一致！ A2F = {a2fName}, Mesh = {meshName}", renderer);
+                }
+            }
+
+            if (mismatchCount > 0)
+            {
+                Debug.LogWarning($"⚠️ {renderer.name} 發現 {mismatchCount} 個 Index 不一致", renderer);
+            }
+            else if (count == 52)
+            {
+                Debug.Log($"🎉 {renderer.name} 的 A2F 52-Key Index 完全一致！", renderer);
+            }
+        }
+    }
+
     //private void UpdateBlendShapes(float[] arkitWeights)
     //{
     //    // 1. 如果陣列是空的，直接跳出
@@ -188,33 +252,23 @@ public class A2FController : MonoBehaviour
     //}
     private void UpdateBlendShapes(float[] arkitWeights)
     {
-        if (targetRenderers == null || targetRenderers.Length == 0) return;
+        if (targetRenderers == null || targetRenderers.Length == 0)
+            return;
 
         foreach (var renderer in targetRenderers)
         {
-            if (renderer == null || renderer.sharedMesh == null) continue;
+            if (renderer == null || renderer.sharedMesh == null)
+                continue;
 
-            // 走訪 A2F 傳來的 52 個數值
-            for (int i = 0; i < Mathf.Min(arkitWeights.Length, a2fBlendshapeNames.Length); i++)
+            int count = Mathf.Min(
+                52,
+                arkitWeights.Length,
+                renderer.sharedMesh.blendShapeCount
+            );
+
+            for (int i = 0; i < count; i++)
             {
-                // 1. 取得標準表情名稱
-                string bsName = a2fBlendshapeNames[i];
-
-                // 2. 用名字去模型身上尋找正確的編號 (Index)
-                int meshIndex = renderer.sharedMesh.GetBlendShapeIndex(bsName);
-
-                // 防呆機制：HANA Tool 產生的名字字首可能是小寫 (例如 eyeBlinkLeft)
-                if (meshIndex == -1)
-                {
-                    string lowerName = char.ToLower(bsName[0]) + bsName.Substring(1);
-                    meshIndex = renderer.sharedMesh.GetBlendShapeIndex(lowerName);
-                }
-
-                // 3. 如果模型身上真的有這個表情，才把數值套用上去
-                if (meshIndex != -1)
-                {
-                    renderer.SetBlendShapeWeight(meshIndex, arkitWeights[i] * 100f);
-                }
+                renderer.SetBlendShapeWeight(i, arkitWeights[i] * 100f);
             }
         }
     }
