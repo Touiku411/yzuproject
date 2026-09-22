@@ -13,9 +13,9 @@ using NvidiaAce.AnimationData.V1;
 
 public class A2FController : MonoBehaviour
 {
-    [Header("連線設定 (已被程式碼強制覆蓋)")]
-    [Tooltip("為了避免格式錯誤，網址已在腳本內寫死為 http://127.0.0.1:52000")]
-    public string serverAddress = "http://127.0.0.1:52000";
+    [Header("A2F gRPC 連線設定")]
+    [Tooltip("A2F gRPC 位址，不需要加 http://")]
+    public string serverAddress = "127.0.0.1:52000";
 
     [Header("身體動畫控制")]
     public Animator bodyAnimator;
@@ -48,26 +48,79 @@ public class A2FController : MonoBehaviour
     private Channel channel; // 注意：這裡用的是 Grpc.Core 的 Channel
     private A2FControllerService.A2FControllerServiceClient client;
 
-    void Start()
+    async void Start()
     {
-        string targetAddress = "127.0.0.1:52000"; 
-        channel = new Channel(targetAddress, ChannelCredentials.Insecure);
-        client = new A2FControllerService.A2FControllerServiceClient(channel);
-        Debug.Log("✅ gRPC 原生核心連線成功！");
+        channel = new Channel(
+            serverAddress,
+            ChannelCredentials.Insecure
+        );
+
+        client =
+            new A2FControllerService
+                .A2FControllerServiceClient(channel);
+
+        Debug.Log(
+            $"🔌 正在連線 A2F：{serverAddress}"
+        );
+
+        try
+        {
+            await channel.ConnectAsync(
+                DateTime.UtcNow.AddSeconds(5)
+            );
+
+            Debug.Log(
+                $"✅ A2F gRPC 連線成功：{serverAddress}"
+            );
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(
+                $"❌ A2F gRPC 無法連線：{serverAddress}\n{e.Message}"
+            );
+        }
     }
+
+    public Task ProcessAudioClip(AudioClip clip)
+    {
+        if (clip == null)
+        {
+            Debug.LogWarning("⚠️ A2F 收到的 AudioClip 是空的！");
+            return Task.CompletedTask;
+        }
+
+        if (client == null)
+        {
+            Debug.LogError("❌ A2F gRPC Client 尚未初始化！");
+            return Task.CompletedTask;
+        }
+
+        if (bodyAnimator != null)
+        {
+            bodyAnimator.SetBool("IsTalking", true);
+        }
+
+        Debug.Log(
+            $"🎭 A2F 開始處理 TTS AudioClip，長度：{clip.length:F2} 秒"
+        );
+
+        return SendAudioAndReceiveAnimation(clip);
+    }
+
+
     // 💡 這裡改成了公開方法，讓 UI 按鈕可以直接呼叫，避開鍵盤系統衝突
     public void TriggerA2FTest()
     {
         if (testAudioClip != null)
         {
             Debug.Log("🚀 開始傳送語音並接收動畫...");
-            AudioSource.PlayClipAtPoint(testAudioClip, transform.position);
 
-            if (bodyAnimator != null)
-            {
-                bodyAnimator.SetBool("IsTalking", true);
-            }
-            _ = SendAudioAndReceiveAnimation(testAudioClip);
+            AudioSource.PlayClipAtPoint(
+                testAudioClip,
+                transform.position
+            );
+
+            _ = ProcessAudioClip(testAudioClip);
         }
         else
         {
@@ -232,24 +285,6 @@ public class A2FController : MonoBehaviour
         }
     }
 
-    //private void UpdateBlendShapes(float[] arkitWeights)
-    //{
-    //    // 1. 如果陣列是空的，直接跳出
-    //    if (targetRenderers == null || targetRenderers.Length == 0) return;
-
-    //    // 2. 用 foreach 迴圈，把數據倒給陣列裡的所有網格 (臉皮、牙齒、舌頭)
-    //    foreach (var renderer in targetRenderers)
-    //    {
-    //        // 防呆：如果某個格子空著，或是網格壞了，就跳過它
-    //        if (renderer == null || renderer.sharedMesh == null) continue;
-
-    //        int maxIndex = Mathf.Min(renderer.sharedMesh.blendShapeCount, arkitWeights.Length);
-    //        for (int i = 0; i < maxIndex; i++)
-    //        {
-    //            renderer.SetBlendShapeWeight(i, arkitWeights[i] * 100f);
-    //        }
-    //    }
-    //}
     private void UpdateBlendShapes(float[] arkitWeights)
     {
         if (targetRenderers == null || targetRenderers.Length == 0)
