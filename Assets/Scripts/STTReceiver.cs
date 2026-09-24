@@ -26,7 +26,7 @@ public class STTReceiver : MonoBehaviour
         listenThread.IsBackground = true;
         listenThread.Start();
 
-        Debug.Log($"👂 大師的耳朵已開啟，正在監聽 Port: {listenPort}");
+        Debug.Log($" 正在監聽 Port: {listenPort}");
     }
 
     private void ListenForUDP()
@@ -61,7 +61,7 @@ public class STTReceiver : MonoBehaviour
 
             hasNewText = false;
 
-            Debug.Log($"🗣️ 使用者說了： {text}");
+            Debug.Log($" 使用者說了： {text}");
 
             OnTranscriptReceived?.Invoke(text);
         }

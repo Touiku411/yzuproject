@@ -29,19 +29,28 @@ def ask_llm(user_text):
                 "role": "user",
                 "content": user_text
             }
-        ]
+        ],
+        "stream": False
     }
 
+    try:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            timeout=120
+        )
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=payload,
-        timeout=120
-    )
+        response.raise_for_status()
 
-    response.raise_for_status()
+    except requests.exceptions.Timeout:
+        print("LLM 回應超時")
+        return None
 
+    except requests.exceptions.RequestException as e:
+        print(f"LLM API 錯誤：{e}")
+        return None
+        
     data = response.json()
 
     reply = data["choices"][0]["message"]["content"].strip()
@@ -51,4 +60,4 @@ user_text = input("你:")
 
 reply = ask_llm(user_text)
 
-print(f"🧠 大師回答：{reply}")
+print(f"回應：{reply}")

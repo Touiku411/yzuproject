@@ -101,10 +101,10 @@ def ask_llm(user_text):
     turn_count = (len(conversation_history) - 1) // 2
 
     print(
-        f"📚 目前保留 {turn_count}/{MAX_CONVERSATION_TURNS} 輪對話"
+        f"目前保留 {turn_count}/{MAX_CONVERSATION_TURNS} 輪對話"
     )
 
-    print("📚 目前對話紀錄：")
+    print("目前對話紀錄：")
 
     for message in conversation_history:
         print(
@@ -126,7 +126,7 @@ def generate_tts(text):
         "text": text,
         "speechVoicePresetName": "yikong",
         "textPreprocessorName": "sliced_by_chinese_grammar",
-        "speed": 1.0
+        "speed": 0.9
     }
 
     response = requests.post(
@@ -149,11 +149,11 @@ def root():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    print(f"🗣️ Unity 傳來：{request.text}")
+    print(f"Unity 傳來：{request.text}")
 
     reply = ask_llm(request.text)
 
-    print(f"🧠 LLM 回答：{reply}")
+    print(f"LLM 回答：{reply}")
 
     return {
         "reply": reply
@@ -163,12 +163,12 @@ def chat(request: ChatRequest):
 @app.post("/tts")
 def tts(request: TTSRequest):
 
-    print(f"🔊 準備合成語音：{request.text}")
+    print(f"準備合成語音：{request.text}")
 
     audio_data = generate_tts(request.text)
 
     print(
-        f"✅ TTS 完成，MP3 大小：{len(audio_data)} bytes"
+        f"TTS 完成，MP3 大小：{len(audio_data)} bytes"
     )
 
     return Response(
@@ -181,7 +181,7 @@ def tts(request: TTSRequest):
 def clear_history():
     clear_conversation_history()
 
-    print("🧹 對話紀錄已清除")
+    print("對話紀錄已清除")
 
     return {
         "status": "ok",

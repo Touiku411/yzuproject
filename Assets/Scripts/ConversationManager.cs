@@ -60,7 +60,7 @@ public class ConversationManager : MonoBehaviour
         else
         {
             Debug.LogError(
-                "❌ ConversationManager 沒有設定 STTReceiver！"
+                " ConversationManager 沒有設定 STTReceiver！"
             );
         }
     }
@@ -86,13 +86,13 @@ public class ConversationManager : MonoBehaviour
                 UnityWebRequest.Result.Success)
             {
                 Debug.LogError(
-                    $"❌ 清除對話失敗：{request.error}"
+                    $" 清除對話失敗：{request.error}"
                 );
 
                 yield break;
             }
 
-            Debug.Log("🧹 對話紀錄已清除！");
+            Debug.Log(" 對話紀錄已清除！");
         }
     }
     private bool isBusy = false;
@@ -101,14 +101,14 @@ public class ConversationManager : MonoBehaviour
         if (isBusy)
         {
             Debug.LogWarning(
-                $"⏳ 大師正在回答，暫時忽略：{text}"
+                $" 大師正在回答，暫時忽略：{text}"
             );
 
             return;
         }
 
         Debug.Log(
-            $"🧠 ConversationManager 收到：{text}"
+            $" ConversationManager 收到：{text}"
         );
 
         isBusy = true;
@@ -134,7 +134,7 @@ public class ConversationManager : MonoBehaviour
             Encoding.UTF8.GetBytes(json);
 
         Debug.Log(
-            $"📤 傳送給 LLM：{json}"
+            $" 傳送給 LLM：{json}"
         );
 
 
@@ -160,7 +160,7 @@ public class ConversationManager : MonoBehaviour
                 UnityWebRequest.Result.Success)
             {
                 Debug.LogError(
-                    $"❌ LLM Request 失敗：{request.error}"
+                    $" LLM Request 失敗：{request.error}"
                 );
 
                 yield break;
@@ -171,7 +171,7 @@ public class ConversationManager : MonoBehaviour
                 request.downloadHandler.text;
 
             Debug.Log(
-                $"📥 Python 回傳：{responseJson}"
+                $" Python 回傳：{responseJson}"
             );
 
 
@@ -182,7 +182,7 @@ public class ConversationManager : MonoBehaviour
 
 
             Debug.Log(
-                $"🤖 大師回答：{chatResponse.reply}"
+                $" 回答：{chatResponse.reply}"
             );
 
             yield return StartCoroutine(
@@ -204,7 +204,7 @@ public class ConversationManager : MonoBehaviour
             JsonUtility.ToJson(ttsRequest);
 
         Debug.Log(
-            $"🔊 傳送給 TTS：{json}"
+            $" 傳送給 TTS：{json}"
         );
 
 
@@ -229,7 +229,7 @@ public class ConversationManager : MonoBehaviour
                 UnityWebRequest.Result.Success)
             {
                 Debug.LogError(
-                    $"❌ TTS Request 失敗：{request.error}"
+                    $" TTS Request 失敗：{request.error}"
                 );
                 
                 isBusy = false;
@@ -243,7 +243,7 @@ public class ConversationManager : MonoBehaviour
             if (clip == null)
             {
                 Debug.LogError(
-                    "❌ TTS MP3 無法轉換成 AudioClip"
+                    " TTS MP3 無法轉換成 AudioClip"
                 );
 
                 yield break;
@@ -260,7 +260,7 @@ public class ConversationManager : MonoBehaviour
             else
             {
                 Debug.LogWarning(
-                    "⚠️ ConversationManager 尚未設定 A2FController"
+                    " ConversationManager 尚未設定 A2FController"
                 );
             }
 
@@ -269,7 +269,7 @@ public class ConversationManager : MonoBehaviour
             ttsAudioSource.Play();
 
             Debug.Log(
-                $"▶️ 開始播放 TTS，長度：{clip.length:F2} 秒"
+                $" 開始播放 TTS，長度：{clip.length:F2} 秒"
             );
 
 
@@ -280,7 +280,7 @@ public class ConversationManager : MonoBehaviour
 
 
             Debug.Log(
-                "✅ TTS 播放完成"
+                " TTS 播放完成"
             );
 
             if (a2fTask != null)
@@ -293,7 +293,7 @@ public class ConversationManager : MonoBehaviour
                 if (a2fTask.IsFaulted)
                 {
                     Debug.LogError(
-                        $"❌ A2F Task 發生錯誤：{a2fTask.Exception}"
+                        $" A2F Task 發生錯誤：{a2fTask.Exception}"
                     );
                 }
             }

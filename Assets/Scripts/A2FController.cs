@@ -60,7 +60,7 @@ public class A2FController : MonoBehaviour
                 .A2FControllerServiceClient(channel);
 
         Debug.Log(
-            $"🔌 正在連線 A2F：{serverAddress}"
+            $" 正在連線 A2F：{serverAddress}"
         );
 
         try
@@ -70,13 +70,13 @@ public class A2FController : MonoBehaviour
             );
 
             Debug.Log(
-                $"✅ A2F gRPC 連線成功：{serverAddress}"
+                $" A2F gRPC 連線成功：{serverAddress}"
             );
         }
         catch (Exception e)
         {
             Debug.LogError(
-                $"❌ A2F gRPC 無法連線：{serverAddress}\n{e.Message}"
+                $" A2F gRPC 無法連線：{serverAddress}\n{e.Message}"
             );
         }
     }
@@ -85,23 +85,26 @@ public class A2FController : MonoBehaviour
     {
         if (clip == null)
         {
-            Debug.LogWarning("⚠️ A2F 收到的 AudioClip 是空的！");
+            Debug.LogWarning(" A2F 收到的 AudioClip 是空的！");
             return Task.CompletedTask;
         }
 
         if (client == null)
         {
-            Debug.LogError("❌ A2F gRPC Client 尚未初始化！");
+            Debug.LogError(" A2F gRPC Client 尚未初始化！");
             return Task.CompletedTask;
         }
 
         if (bodyAnimator != null)
         {
+            int talkVariant = UnityEngine.Random.Range(0, 3);
+            bodyAnimator.SetInteger("TalkVariant", talkVariant);
             bodyAnimator.SetBool("IsTalking", true);
+            Debug.Log($"說話動畫:{talkVariant}");
         }
 
         Debug.Log(
-            $"🎭 A2F 開始處理 TTS AudioClip，長度：{clip.length:F2} 秒"
+            $" A2F 開始處理 TTS AudioClip，長度：{clip.length:F2} 秒"
         );
 
         return SendAudioAndReceiveAnimation(clip);
@@ -113,7 +116,7 @@ public class A2FController : MonoBehaviour
     {
         if (testAudioClip != null)
         {
-            Debug.Log("🚀 開始傳送語音並接收動畫...");
+            Debug.Log(" 開始傳送語音並接收動畫...");
 
             AudioSource.PlayClipAtPoint(
                 testAudioClip,
@@ -124,7 +127,7 @@ public class A2FController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("⚠️ 請先在 Inspector 欄位中放入 Test Audio Clip 語音檔！");
+            Debug.LogWarning(" 請先在 Inspector 欄位中放入 Test Audio Clip 語音檔！");
         }
     }
 
@@ -188,11 +191,11 @@ public class A2FController : MonoBehaviour
                     }
                 }
             }
-            Debug.Log("🎉 大師表情動畫播放完畢！");
+            Debug.Log(" 動畫播放完畢！");
         }
         catch (RpcException e)
         {
-            Debug.LogError($"❌ gRPC 連線錯誤: {e.Status.Detail}");
+            Debug.LogError($" gRPC 連線錯誤: {e.Status.Detail}");
         }
         finally
         {
@@ -227,7 +230,7 @@ public class A2FController : MonoBehaviour
     {
         if (targetRenderers == null || targetRenderers.Length == 0)
         {
-            Debug.LogWarning("⚠️ 請先設定 targetRenderers", this);
+            Debug.LogWarning(" 請先設定 targetRenderers", this);
             return;
         }
 
@@ -235,7 +238,7 @@ public class A2FController : MonoBehaviour
         {
             if (renderer == null)
             {
-                Debug.LogWarning("⚠️ targetRenderers 中有未指定的 Renderer", this);
+                Debug.LogWarning(" targetRenderers 中有未指定的 Renderer", this);
                 continue;
             }
 
@@ -243,7 +246,7 @@ public class A2FController : MonoBehaviour
 
             if (renderer.sharedMesh == null)
             {
-                Debug.LogWarning($"⚠️ {renderer.name} 沒有 sharedMesh", renderer);
+                Debug.LogWarning($" {renderer.name} 沒有 sharedMesh", renderer);
                 continue;
             }
 
@@ -252,7 +255,7 @@ public class A2FController : MonoBehaviour
 
             if (blendShapeCount < 52)
             {
-                Debug.LogWarning($"⚠️ {renderer.name} 只有 {blendShapeCount} 個 BlendShape，不到 52 個", renderer);
+                Debug.LogWarning($" {renderer.name} 只有 {blendShapeCount} 個 BlendShape，不到 52 個", renderer);
             }
 
             int count = Mathf.Min(52, blendShapeCount);
@@ -265,22 +268,22 @@ public class A2FController : MonoBehaviour
 
                 if (string.Equals(meshName, a2fName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Debug.Log($"✅ [{i}] {a2fName}", renderer);
+                    Debug.Log($" [{i}] {a2fName}", renderer);
                 }
                 else
                 {
                     mismatchCount++;
-                    Debug.LogWarning($"❌ [{i}] 不一致！ A2F = {a2fName}, Mesh = {meshName}", renderer);
+                    Debug.LogWarning($" [{i}] 不一致！ A2F = {a2fName}, Mesh = {meshName}", renderer);
                 }
             }
 
             if (mismatchCount > 0)
             {
-                Debug.LogWarning($"⚠️ {renderer.name} 發現 {mismatchCount} 個 Index 不一致", renderer);
+                Debug.LogWarning($" {renderer.name} 發現 {mismatchCount} 個 Index 不一致", renderer);
             }
             else if (count == 52)
             {
-                Debug.Log($"🎉 {renderer.name} 的 A2F 52-Key Index 完全一致！", renderer);
+                Debug.Log($" {renderer.name} 的 A2F 52-Key Index 完全一致！", renderer);
             }
         }
     }
