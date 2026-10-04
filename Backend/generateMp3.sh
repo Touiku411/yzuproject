@@ -14,4 +14,4 @@ curl -X POST \
     "textPreprocessorName": "sliced_by_chinese_grammar",
     "speed": 0.85
   }' \
-  --output a2f_test_0.85_chinese.mp3
+  --output a2f_test1.mp3

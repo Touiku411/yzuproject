@@ -760,6 +760,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: db4637291be2f55449ebbeae91a6aadf, type: 3}
       insertIndex: 2
       addedObject: {fileID: 2044015614}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: db4637291be2f55449ebbeae91a6aadf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2044015617}
     - targetCorrespondingSourceObject: {fileID: -6456134142813135571, guid: db4637291be2f55449ebbeae91a6aadf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1808308546}
@@ -1697,6 +1700,29 @@ MonoBehaviour:
   headWeight: 0.8
   eyesWeight: 1
   clampWeight: 0.6
+--- !u!114 &2044015617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863959972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0593f529ba2872783822c48c44d1cfc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VibesMotionPlayer
+  motionJson: {fileID: 4900000, guid: b2185cbc4746e466894528d5c0224757, type: 3}
+  animator: {fileID: 2044015611}
+  mirrorX: 1
+  motion:
+    fps: 0
+    frames: []
+  hips: {fileID: 0}
+  initialHips: {x: 0, y: 0, z: 0}
+  initialMotionRoot: {x: 0, y: 0, z: 0}
+  scale: 0
+  startTime: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
