@@ -16,6 +16,8 @@ public class A2FController : MonoBehaviour
     [Header("A2F gRPC 連線設定")]
     [Tooltip("A2F gRPC 位址，不需要加 http://")]
     public string serverAddress = "127.0.0.1:52000";
+    // public string serverAddress = "10.42.10.76:52000";
+    
 
     [Header("身體動畫控制")]
     public Animator bodyAnimator;

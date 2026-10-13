@@ -18,10 +18,36 @@ fi
 
 INPUT_FILE="$1"
 
+
+read -p "檔名: " name
+
+echo "=== 請選擇操作 ==="
+echo "1) yikong"
+echo "2) shinbao "
+echo "3) hueichuan"
+echo "================"
+read -p "請輸入數字 (1-3): " choice
+
+case $choice in
+    1)
+        model="yikong"
+        ;;
+    2)
+        model="shinbao"
+        ;;
+    3)
+        model="hueichuan"
+        ;;
+    *)
+        echo "輸入無效，請重新執行腳本"
+        ;;
+esac
+
+
 # 自動讀取檔案內容並包裝成合法的 JSON 字串（會自動處理換行 \n）
 JSON_DATA=$(jq -n \
   --arg text "$(cat "$INPUT_FILE")" \
-  --arg voice "yikong" \
+  --arg voice $model \
   --arg preprocessor "sliced_by_chinese_grammar" \
   --argjson speed 0.85 \
   '{text: $text, speechVoicePresetName: $voice, textPreprocessorName: $preprocessor, speed: $speed}')
@@ -33,6 +59,6 @@ curl -X POST \
   -H "Authorization: Bearer $FGS_TTS_TOKEN" \
   -H 'Content-Type: application/json' \
   -d "$JSON_DATA" \
-  --output a2f_test1.mp3
+  --output tts${name}.mp3
 
-echo "轉換完成，音檔已儲存至 a2f_test1.mp3"
+echo "轉換完成，音檔已儲存至 tts${name}.mp3"

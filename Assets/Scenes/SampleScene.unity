@@ -969,6 +969,76 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: db4637291be2f55449ebbeae91a6aadf, type: 3}
   m_PrefabInstance: {fileID: 711689074}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &940557437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 940557439}
+  - component: {fileID: 940557438}
+  - component: {fileID: 940557440}
+  m_Layer: 0
+  m_Name: ZeroEGGS_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &940557438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940557437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056acbfc69d3d8fc09b6c5d223f615e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZeroEggsRuntimePlayer
+  apiUrl: http://127.0.0.1:8001
+  sourceRigPrefab: {fileID: 919132149155446097, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
+  targetAnimator: {fileID: 2044015611}
+  audioOutput: {fileID: 1178486550}
+  referenceAudio: {fileID: 8300000, guid: 9ba5e2e3d0c3775f6994f19b7bc419b6, type: 3}
+  referenceClip: {fileID: -8015426733385097973, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
+  keepInPlace: 1
+  fileMotionEmotion: 1
+--- !u!4 &940557439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940557437}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.04589, y: 2.14378, z: 0.11853}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &940557440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940557437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a77f350e3d4727b07aeeaf744bd68a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZeroEggsTtsTest
+  player: {fileID: 940557438}
+  a2fController: {fileID: 1271626581}
+  ttsUrl: http://127.0.0.1:8000/tts
+  testSpeech: Hello, I am your tour guide. I will now introduce the history and features
+    of this place.
 --- !u!1 &1178486547
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,12 +1069,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713cae3fb1b581c758aac63b35bc38eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversationManager
-  a2fController: {fileID: 1271626581}
   sttReceiver: {fileID: 1271626583}
   llmUrl: http://127.0.0.1:8000/chat
+  clearHistoryUrl: http://127.0.0.1:8000/clear-history
   ttsUrl: http://127.0.0.1:8000/tts
   ttsAudioSource: {fileID: 1178486550}
-  clearHistoryUrl: http://127.0.0.1:8000/clear-history
+  zeroEggsPlayer: {fileID: 940557438}
+  a2fController: {fileID: 1271626581}
 --- !u!4 &1178486549
 Transform:
   m_ObjectHideFlags: 0
@@ -1712,17 +1783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0593f529ba2872783822c48c44d1cfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VibesMotionPlayer
-  motionJson: {fileID: 4900000, guid: b2185cbc4746e466894528d5c0224757, type: 3}
-  animator: {fileID: 2044015611}
-  mirrorX: 1
-  motion:
-    fps: 0
-    frames: []
-  hips: {fileID: 0}
-  initialHips: {x: 0, y: 0, z: 0}
-  initialMotionRoot: {x: 0, y: 0, z: 0}
-  scale: 0
-  startTime: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1735,3 +1795,4 @@ SceneRoots:
   - {fileID: 2027042070}
   - {fileID: 787596935}
   - {fileID: 1178486549}
+  - {fileID: 940557439}

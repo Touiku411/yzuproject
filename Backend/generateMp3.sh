@@ -9,7 +9,7 @@ curl -X POST \
   -H "Authorization: Bearer $FGS_TTS_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
-    "text": "各位大家好，今天很高興能和大家一起討論這個問題。",
+    "text": ""Oh my gosh, is that the time already? I completely overslept! Where on earth are my car keys? I am going to be so incredibly late today!"。",
     "speechVoicePresetName": "yikong",
     "textPreprocessorName": "sliced_by_chinese_grammar",
     "speed": 0.85
