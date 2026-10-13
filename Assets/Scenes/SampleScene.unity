@@ -1003,7 +1003,7 @@ MonoBehaviour:
   sourceRigPrefab: {fileID: 919132149155446097, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
   targetAnimator: {fileID: 2044015611}
   audioOutput: {fileID: 1178486550}
-  referenceAudio: {fileID: 8300000, guid: 9ba5e2e3d0c3775f6994f19b7bc419b6, type: 3}
+  referenceAudio: {fileID: 8300000, guid: 967c8bd4565b4f24281de0a73fc68854, type: 3}
   referenceClip: {fileID: -8015426733385097973, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
   keepInPlace: 1
   fileMotionEmotion: 1

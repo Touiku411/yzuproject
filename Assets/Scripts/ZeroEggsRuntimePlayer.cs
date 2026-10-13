@@ -712,9 +712,19 @@ void SampleReferencePose()
     {
         while (initializing) yield return null;
 
-        if (!ready || !referenceAudio)
+        if (!referenceAudio)
         {
-            Debug.LogError("請指定 Reference Audio 並啟動 API", this);
+            Debug.LogError(
+                $"[{gameObject.name}] Reference Audio 未指定", this);
+            yield break;
+        }
+
+        if (!ready)
+        {
+            Debug.LogError(
+                $"[{gameObject.name}] 骨架初始化未成功，API：{apiUrl}。" +
+                "請查看前面的 API 連線或骨架校準錯誤。",
+                this);
             yield break;
         }
 
