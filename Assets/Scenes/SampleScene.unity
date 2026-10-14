@@ -205,13 +205,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0004589451, y: 0.99743015, z: -0.07135694, w: -0.006415155}
-  m_LocalPosition: {x: 0.002, y: 1.258, z: 1.338}
+  m_LocalRotation: {x: -0.0013473354, y: 0.97779095, z: -0.20948415, w: -0.006288841}
+  m_LocalPosition: {x: 0.01, y: 1.73, z: 1.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 8.184, y: 180.737, z: 0}
+  m_LocalEulerAnglesHint: {x: 24.185, y: 180.737, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,7 +556,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -454, y: -329}
+  m_AnchoredPosition: {x: -454, y: -460}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &610281302
@@ -910,11 +910,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 697e710b7af3dc94eae49dec59981143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WebcamTargetController
-  moveMultiplier: 1.5
-  smoothSpeed: 10
-  saccadeRadius: 0.05
-  minSaccadeTime: 0.2
-  maxSaccadeTime: 1.5
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,9 +998,10 @@ MonoBehaviour:
   sourceRigPrefab: {fileID: 919132149155446097, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
   targetAnimator: {fileID: 2044015611}
   audioOutput: {fileID: 1178486550}
-  referenceAudio: {fileID: 8300000, guid: 967c8bd4565b4f24281de0a73fc68854, type: 3}
+  referenceAudio: {fileID: 8300000, guid: 4e4c90ebf12f0735483a1e3275e18330, type: 3}
   referenceClip: {fileID: -8015426733385097973, guid: 5b726efae64f40b8997bc1e2b0e83fce, type: 3}
   keepInPlace: 1
+  a2fController: {fileID: 1271626581}
   fileMotionEmotion: 1
 --- !u!4 &940557439
 Transform:
@@ -1293,7 +1289,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 378, y: -335}
+  m_AnchoredPosition: {x: -278, y: -462}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1318703239
@@ -1765,12 +1761,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1170931c94d04cb46bb6d1ed132d2947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleHeadLookAt
-  lookAtTarget: {fileID: 787596935}
-  overallWeight: 1
-  bodyWeight: 0.1
-  headWeight: 0.8
-  eyesWeight: 1
-  clampWeight: 0.6
 --- !u!114 &2044015617
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
+using System.Threading.Tasks;
+
 
 public class ZeroEggsRuntimePlayer : MonoBehaviour
 {
@@ -19,12 +21,15 @@ public class ZeroEggsRuntimePlayer : MonoBehaviour
     public enum FileMotionEmotion
     {
         neutral,
-        happy,
+        joy,
         sad,
         angry,
         relaxed
     }
-    [Header("音檔測試風格")]
+    [Header("A2F臉部動畫")]
+    public A2FController a2fController;
+
+    [Header("音檔風格")]
     public FileMotionEmotion fileMotionEmotion =
         FileMotionEmotion.neutral;
 
@@ -805,9 +810,8 @@ public void GenerateMotionForCurrentAudio()
     StartCoroutine(GenerateAndPlayAudioFile(referenceAudio));
 }
 
-    IEnumerator GenerateAndPlayAudioFile(AudioClip clip)
+        IEnumerator GenerateAndPlayAudioFile(AudioClip clip)
     {
-        // 固定本次使用的風格與音訊輸出。
         string emotion = fileMotionEmotion.ToString();
         AudioSource output = audioOutput;
 
@@ -819,26 +823,85 @@ public void GenerateMotionForCurrentAudio()
                 this
             );
 
+            // 先根據同一份音訊生成身體動作。
             yield return Prepare(clip, emotion);
 
             if (prepared == null)
             {
                 Debug.LogError(
-                    "[ZeroEGGS音檔測試] 未取得可播放的動作，" +
-                    "請查看前面的生成錯誤。",
+                    "[ZeroEGGS音檔測試] 未取得動作，請查看生成錯誤。",
                     this
                 );
                 yield break;
             }
 
+            // 音訊仍由 ZeroEGGS 的 AudioSource 播放。
             if (!PlayPrepared(clip, output))
             {
                 Debug.LogError(
-                    "[ZeroEGGS音檔測試] 播放失敗，" +
-                    "請查看前面的錯誤或長度檢查。",
+                    "[ZeroEGGS音檔測試] 語音與身體播放失敗。",
+                    this
+                );
+                yield break;
+            }
+
+            Task a2fTask = null;
+
+            // 同一份音訊送到 A2F，處理嘴型與表情。
+            if (a2fController &&
+                a2fController.isActiveAndEnabled)
+            {
+                try
+                {
+                    a2fTask = a2fController.ProcessAudioClip(clip);
+
+                    Debug.Log(
+                        "[ZeroEGGS音檔測試] 已將同一份語音送至 A2F。",
+                        this
+                    );
+                }
+                catch (Exception error)
+                {
+                    Debug.LogError(
+                        $"[ZeroEGGS音檔測試] A2F 啟動失敗：{error.Message}",
+                        this
+                    );
+                }
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "[ZeroEGGS音檔測試] A2F 未指定或未啟用。",
                     this
                 );
             }
+
+            // 身體與 A2F 都完成，才開放下一次音檔測試。
+            while (IsPlaying ||
+                (a2fTask != null && !a2fTask.IsCompleted))
+            {
+                yield return null;
+            }
+
+            if (a2fTask != null && a2fTask.IsFaulted)
+            {
+                Debug.LogError(
+                    $"[ZeroEGGS音檔測試] A2F 處理失敗：{a2fTask.Exception}",
+                    this
+                );
+            }
+            else if (a2fTask != null && a2fTask.IsCanceled)
+            {
+                Debug.LogWarning(
+                    "[ZeroEGGS音檔測試] A2F 處理已取消。",
+                    this
+                );
+            }
+
+            Debug.Log(
+                "[ZeroEGGS音檔測試] 語音、身體與 A2F 處理完成。",
+                this
+            );
         }
         finally
         {
