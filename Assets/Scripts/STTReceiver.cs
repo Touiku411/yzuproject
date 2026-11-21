@@ -18,6 +18,26 @@ public class STTReceiver : MonoBehaviour
     private string latestText = "";
     private bool hasNewText = false;
 
+    [Header("文字測試")]
+    [TextArea(2, 5)]
+    public string testText = "你好，請介紹一下自己。";
+
+    [ContextMenu("送出測試文字")]
+    private void SendTestText()
+    {
+        if(!Application.isPlaying){
+            Debug.LogWarning("請先進入 Play 模式");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(testText))
+            return;
+        string text = testText.Trim();
+
+        Debug.Log($"[文字測試] {text}");
+        OnTranscriptReceived?.Invoke(text);
+    }
+    
+
     void Start()
     {
         udpClient = new UdpClient(listenPort);

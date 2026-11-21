@@ -52,11 +52,34 @@ public class ConversationManager : MonoBehaviour
     [SerializeField]
     private A2FController a2fController;
 
+    [Header("使用者偵測")]
+    [SerializeField]
+    private PersonWatcherReceiver personWatcher;
+
+    [SerializeField]
+    private bool requirePersonDetection = true;
+
+    [SerializeField, Min(0f)]
+    private float requiredDwellSeconds = 1.5f;
+
     private STTReceiver subscribedReceiver;
     private AudioClip currentClip;
     private bool isBusy;
     private bool ownsPlayback;
 
+    private bool CanInteractWithPerson()
+    {
+        if (personWatcher == null || !personWatcher.isActiveAndEnabled)
+        {
+            return false;
+        }
+        return personWatcher.hasNearest
+            && personWatcher.inZone
+            && personWatcher.dwellSeconds >= requiredDwellSeconds
+            && personWatcher.hasHeadPose
+            && personWatcher.facingCamera;
+    }
+    
     void OnEnable()
     {
         if (sttReceiver == null)
@@ -76,6 +99,12 @@ public class ConversationManager : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(text))
             return;
+
+        if (requirePersonDetection && !CanInteractWithPerson())
+        {
+            Debug.Log("[對話] 使用者尚未符合互動條件，忽略此次輸入。", this);
+            return;
+        }
 
         if (isBusy)
         {
